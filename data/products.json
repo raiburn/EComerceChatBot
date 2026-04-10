@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "name": "Men's Waterproof Hiking Pants",
+    "description": "Durable waterproof pants built for long trails. Reinforced knees, 4-way stretch fabric, and 3 zippered pockets. Available in sizes S–3XL.",
+    "category": "Pants",
+    "price": 89.99,
+    "tags": "waterproof, hiking, outdoor, men, pants, durable, trail"
+  },
+  {
+    "id": 2,
+    "name": "Women's Insulated Winter Jacket",
+    "description": "550-fill down insulation jacket for cold weather. Windproof, water-resistant shell, and packable design. Available in XS–2XL.",
+    "category": "Jackets",
+    "price": 149.99,
+    "tags": "winter, jacket, insulated, women, cold weather, down, packable"
+  },
+  {
+    "id": 3,
+    "name": "Trail Running Shoes – Unisex",
+    "description": "Lightweight trail running shoes with aggressive grip outsole and breathable mesh upper. Ideal for rocky terrain and long distances.",
+    "category": "Footwear",
+    "price": 119.99,
+    "tags": "trail, running, shoes, unisex, lightweight, grip, footwear"
+  },
+  {
+    "id": 4,
+    "name": "Men's Fleece Pullover",
+    "description": "Classic mid-layer fleece pullover for layering or casual wear. Anti-pill polyester, kangaroo pocket, and thumbhole cuffs. Sizes S–XXL.",
+    "category": "Tops",
+    "price": 64.99,
+    "tags": "fleece, men, pullover, mid-layer, casual, warm"
+  },
+  {
+    "id": 5,
+    "name": "Women's Waterproof Hiking Boots",
+    "description": "Full-grain leather hiking boots with waterproof membrane, ankle support, and Vibram outsole. Great for multi-day treks.",
+    "category": "Footwear",
+    "price": 189.99,
+    "tags": "hiking, boots, women, waterproof, leather, ankle support, vibram"
+  },
+  {
+    "id": 6,
+    "name": "Packable Rain Jacket – Unisex",
+    "description": "Ultralight rain jacket that packs into its own chest pocket. Seam-sealed, hooded, and ideal for travel and backpacking. Under 300g.",
+    "category": "Jackets",
+    "price": 79.99,
+    "tags": "rain, jacket, unisex, packable, ultralight, travel, waterproof"
+  },
+  {
+    "id": 7,
+    "name": "Merino Wool Base Layer – Men's",
+    "description": "Natural merino wool long-sleeve top that regulates body temperature and resists odor. Perfect for hiking, skiing, and everyday wear.",
+    "category": "Base Layers",
+    "price": 99.99,
+    "tags": "merino, wool, base layer, men, thermal, odor-resistant, skiing, hiking"
+  },
+  {
+    "id": 8,
+    "name": "Women's Yoga & Trail Leggings",
+    "description": "4-way stretch leggings with hidden waistband pocket. Moisture-wicking fabric works for yoga, running, and light hiking.",
+    "category": "Pants",
+    "price": 59.99,
+    "tags": "leggings, women, yoga, trail, moisture-wicking, stretch, running"
+  },
+  {
+    "id": 9,
+    "name": "Trekking Poles – Carbon Fiber",
+    "description": "Adjustable carbon fiber trekking poles with anti-shock system and cork grips. Folds to 38cm for easy packing. Set of 2.",
+    "category": "Accessories",
+    "price": 109.99,
+    "tags": "trekking poles, carbon, hiking, adjustable, anti-shock, accessories"
+  },
+  {
+    "id": 10,
+    "name": "Insulated Water Bottle 32oz",
+    "description": "Double-wall vacuum insulation keeps drinks cold for 24 hours or hot for 12. BPA-free stainless steel, leak-proof lid.",
+    "category": "Accessories",
+    "price": 34.99,
+    "tags": "water bottle, insulated, stainless steel, BPA-free, hydration, accessories"
+  },
+  {
+    "id": 11,
+    "name": "Men's Softshell Climbing Pants",
+    "description": "Technical softshell pants with articulated knees and DWR coating. Designed for climbing, via ferrata, and alpine activities.",
+    "category": "Pants",
+    "price": 134.99,
+    "tags": "softshell, climbing, men, pants, alpine, DWR, technical"
+  },
+  {
+    "id": 12,
+    "name": "Lightweight Backpack 30L",
+    "description": "30-liter daypack with hydration sleeve, hip belt pockets, and trekking pole loops. Weighs only 680g. Ideal for day hikes.",
+    "category": "Bags",
+    "price": 74.99,
+    "tags": "backpack, daypack, 30L, hiking, lightweight, hydration, bag"
+  },
+  {
+    "id": 13,
+    "name": "Women's Softshell Jacket",
+    "description": "Wind-resistant softshell jacket with stretch panels and DWR water repellency. Perfect for shoulder seasons and active pursuits.",
+    "category": "Jackets",
+    "price": 119.99,
+    "tags": "softshell, women, jacket, wind-resistant, stretch, DWR, outdoor"
+  },
+  {
+    "id": 14,
+    "name": "Merino Wool Hiking Socks – 3 Pack",
+    "description": "Cushioned merino wool socks with reinforced heel and toe. Regulates temperature and keeps feet blister-free on long hikes.",
+    "category": "Accessories",
+    "price": 39.99,
+    "tags": "socks, merino, wool, hiking, cushioned, blister-free, accessories"
+  },
+  {
+    "id": 15,
+    "name": "Men's Quick-Dry Shorts",
+    "description": "Lightweight nylon shorts that dry in minutes. Built-in liner, 5 pockets, and UPF 50+ sun protection. Great for hiking and travel.",
+    "category": "Shorts",
+    "price": 49.99,
+    "tags": "shorts, men, quick-dry, UPF, hiking, travel, lightweight, nylon"
+  }
+]
