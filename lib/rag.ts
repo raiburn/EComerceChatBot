@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-import { supabase } from './supabase'
+import { getSupabase } from './supabase'
 
 const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
@@ -26,7 +26,7 @@ export async function generateEmbedding(text: string): Promise<number[]> {
 export async function searchProducts(query: string, limit = 5): Promise<Product[]> {
   const queryEmbedding = await generateEmbedding(query)
 
-  const { data, error } = await supabase.rpc('match_products', {
+  const { data, error } = await getSupabase().rpc('match_products', {
     query_embedding: queryEmbedding,
     match_threshold: 0.4,
     match_count: limit,

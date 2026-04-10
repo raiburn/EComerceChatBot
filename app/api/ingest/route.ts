@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 import { generateEmbedding } from '@/lib/rag'
 import products from '@/data/products.json'
 
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     const textToEmbed = `${product.name}. ${product.description}. Tags: ${product.tags}`
     const embedding = await generateEmbedding(textToEmbed)
 
-    const { error } = await supabaseAdmin.from('products').upsert({
+    const { error } = await getSupabaseAdmin().from('products').upsert({
       id: product.id,
       name: product.name,
       description: product.description,
