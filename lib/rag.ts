@@ -40,6 +40,42 @@ export async function searchProducts(query: string, limit = 5): Promise<Product[
   return data as Product[]
 }
 
+// Filter products by price range via direct table query (used by tool calling)
+export async function filterProductsByPrice(minPrice?: number, maxPrice?: number): Promise<Product[]> {
+  let query = getSupabase()
+    .from('products')
+    .select('id, name, description, category, price, tags')
+    .order('price', { ascending: true })
+
+  if (minPrice !== undefined) query = query.gte('price', minPrice)
+  if (maxPrice !== undefined) query = query.lte('price', maxPrice)
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Supabase filter error:', error)
+    return []
+  }
+
+  return (data ?? []).map((p) => ({ ...p, similarity: 1 })) as Product[]
+}
+
+// Filter products by category via direct table query (used by tool calling)
+export async function filterProductsByCategory(category: string): Promise<Product[]> {
+  const { data, error } = await getSupabase()
+    .from('products')
+    .select('id, name, description, category, price, tags')
+    .ilike('category', `%${category}%`)
+    .order('price', { ascending: true })
+
+  if (error) {
+    console.error('Supabase filter error:', error)
+    return []
+  }
+
+  return (data ?? []).map((p) => ({ ...p, similarity: 1 })) as Product[]
+}
+
 // Format retrieved products into a readable context block for the LLM
 export function buildProductContext(products: Product[]): string {
   if (products.length === 0) return 'No matching products found in our catalog.'
