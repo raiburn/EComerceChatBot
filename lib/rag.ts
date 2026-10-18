@@ -32,10 +32,8 @@ export async function searchProducts(query: string, limit = 5): Promise<Product[
     match_count: limit,
   })
 
-  if (error) {
-    console.error('Supabase search error:', error)
-    return []
-  }
+  // Throw rather than return [] so callers can tell "no matches" from "catalog unreachable".
+  if (error) throw new Error(`Supabase search error: ${error.message}`)
 
   return data as Product[]
 }

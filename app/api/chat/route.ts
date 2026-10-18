@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai'
-import { streamText, tool } from 'ai'
+import { streamText, tool, type Message } from 'ai'
 import { z } from 'zod'
 import {
   searchProducts,
@@ -10,8 +10,48 @@ import {
 
 export const runtime = 'edge'
 
+const MAX_CHARS = 500
+const MAX_MESSAGES = 20
+const RATE_LIMIT = 20 // requests per IP per window
+const RATE_WINDOW_MS = 60_000
+
+// Per-instance only (edge isolates don't share memory), but it stops a single client from looping the endpoint.
+const hits = new Map<string, number[]>()
+
+function isRateLimited(ip: string) {
+  const now = Date.now()
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS)
+  recent.push(now)
+  hits.set(ip, recent)
+  return recent.length > RATE_LIMIT
+}
+
+// useChat surfaces the response body as the error message, so keep it user-readable.
+const fail = (message: string, status: number) => new Response(message, { status })
+
 export async function POST(req: Request) {
-  const { messages } = await req.json()
+  // Only accept requests from this site.
+  const origin = req.headers.get('origin')
+  if (!origin || new URL(origin).host !== req.headers.get('host')) {
+    return fail('Forbidden.', 403)
+  }
+
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  if (isRateLimited(ip)) {
+    return fail('Too many messages. Please wait a minute and try again.', 429)
+  }
+
+  const body = await req.json().catch(() => null)
+  const messages: Omit<Message, 'id'>[] | undefined = body?.messages
+  if (!Array.isArray(messages) || messages.length === 0) {
+    return fail('Invalid request.', 400)
+  }
+  if (messages.some((m) => m.role === 'user' && (typeof m.content !== 'string' || m.content.length > MAX_CHARS))) {
+    return fail(`Messages are limited to ${MAX_CHARS} characters.`, 400)
+  }
+  if (messages.length > MAX_MESSAGES) {
+    return fail('This conversation is too long. Refresh the page to start a new one.', 400)
+  }
 
   // (#2) Conversation memory: combine the last 3 user messages for richer RAG retrieval.
   // This keeps context across turns — e.g. "jacket" then "waterproof?" still finds waterproof jackets.
@@ -21,8 +61,13 @@ export async function POST(req: Request) {
     .map((m: { content: string }) => m.content)
     .join(' ')
 
-  const products = await searchProducts(recentContext, 5)
-  const context = buildProductContext(products)
+  let context: string
+  try {
+    context = buildProductContext(await searchProducts(recentContext, 5))
+  } catch (err) {
+    console.error('Catalog search failed:', err)
+    return fail('The product catalog is unavailable right now. Please try again later.', 503)
+  }
 
   const result = await streamText({
     model: openai('gpt-4o-mini'),

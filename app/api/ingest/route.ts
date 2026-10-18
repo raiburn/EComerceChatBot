@@ -10,7 +10,8 @@ import products from '@/data/products.json'
 // Protect this route in production (e.g. check a secret header).
 export async function POST(req: Request) {
   const authHeader = req.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.INGEST_SECRET}`) {
+  // Without a configured secret, "Bearer undefined" would otherwise pass.
+  if (!process.env.INGEST_SECRET || authHeader !== `Bearer ${process.env.INGEST_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
