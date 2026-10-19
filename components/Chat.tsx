@@ -56,6 +56,9 @@ function upsertItem(prev: CartItem[], incoming: { id: number; name: string; pric
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading, append, error } = useChat()
   const bottomRef = useRef<HTMLDivElement>(null)
+  // Tool calls already synced into the cart. Messages re-render on every streamed token,
+  // so without this each add_to_cart result would be added again on every update.
+  const syncedToolCalls = useRef(new Set<string>())
   const [cart, setCart] = useState<CartItem[]>([])
   const [cartOpen, setCartOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
@@ -89,8 +92,10 @@ export default function Chat() {
         if (
           inv.toolName === 'add_to_cart' &&
           inv.state === 'result' &&
-          inv.result?.item
+          inv.result?.item &&
+          !syncedToolCalls.current.has(inv.toolCallId)
         ) {
+          syncedToolCalls.current.add(inv.toolCallId)
           const item = inv.result.item as { id: number; name: string; price: number }
           setCart((prev) => upsertItem(prev, item))
         }

@@ -138,6 +138,11 @@ function ToolBadge({
   return null
 }
 
+// The model formats product names as **bold**; render that instead of showing the asterisks.
+function renderBold(text: string) {
+  return text.split('**').map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))
+}
+
 export default function ChatMessage({ role, content, toolInvocations, onAddToCart }: Props) {
   const isUser = role === 'user'
 
@@ -168,7 +173,7 @@ export default function ChatMessage({ role, content, toolInvocations, onAddToCar
                 : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-sm'
             }`}
           >
-            {content}
+            {renderBold(content)}
           </div>
         )}
       </div>

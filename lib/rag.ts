@@ -39,7 +39,7 @@ export async function searchProducts(query: string, limit = 5): Promise<Product[
 }
 
 // Filter products by price range via direct table query (used by tool calling)
-export async function filterProductsByPrice(minPrice?: number, maxPrice?: number): Promise<Product[]> {
+export async function filterProductsByPrice(minPrice?: number, maxPrice?: number, category?: string): Promise<Product[]> {
   let query = getSupabase()
     .from('products')
     .select('id, name, description, category, price, tags')
@@ -47,6 +47,7 @@ export async function filterProductsByPrice(minPrice?: number, maxPrice?: number
 
   if (minPrice !== undefined) query = query.gte('price', minPrice)
   if (maxPrice !== undefined) query = query.lte('price', maxPrice)
+  if (category) query = query.ilike('category', `%${category}%`)
 
   const { data, error } = await query
 

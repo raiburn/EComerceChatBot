@@ -113,9 +113,13 @@ ${context}`,
         parameters: z.object({
           minPrice: z.number().optional().describe('Minimum price in USD'),
           maxPrice: z.number().optional().describe('Maximum price in USD'),
+          category: z
+            .string()
+            .optional()
+            .describe('Only when the customer names a type of product: Jackets, Pants, Footwear, Tops, Base Layers, Accessories, Bags, Shorts'),
         }),
-        execute: async ({ minPrice, maxPrice }) => {
-          const filtered = await filterProductsByPrice(minPrice, maxPrice)
+        execute: async ({ minPrice, maxPrice, category }) => {
+          const filtered = await filterProductsByPrice(minPrice, maxPrice, category)
           const label = minPrice && maxPrice
             ? `Products $${minPrice}–$${maxPrice}`
             : maxPrice
@@ -124,7 +128,7 @@ ${context}`,
           return {
             products: filtered,
             context: buildProductContext(filtered),
-            label,
+            label: category ? `${category}: ${label.toLowerCase()}` : label,
           }
         },
       }),
