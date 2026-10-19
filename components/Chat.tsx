@@ -3,13 +3,7 @@
 import { useChat } from 'ai/react'
 import { useEffect, useRef, useState, useMemo } from 'react'
 import ChatMessage from './ChatMessage'
-
-interface CartItem {
-  id: number
-  name: string
-  price: number
-  quantity: number
-}
+import { takeNewCartItems, upsertItem, type CartItem } from '@/lib/cart'
 
 const CART_STORAGE_KEY = 'ecomerce-chatbot-cart'
 
@@ -45,19 +39,10 @@ function getFollowUps(lastAssistantMessage: string): string[] {
   return ["What's under $50?", 'Show me all jackets', 'What do you recommend for beginners?']
 }
 
-function upsertItem(prev: CartItem[], incoming: { id: number; name: string; price: number }): CartItem[] {
-  const existing = prev.find((i) => i.id === incoming.id)
-  if (existing) {
-    return prev.map((i) => i.id === incoming.id ? { ...i, quantity: i.quantity + 1 } : i)
-  }
-  return [...prev, { ...incoming, quantity: 1 }]
-}
-
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading, append, error } = useChat()
   const bottomRef = useRef<HTMLDivElement>(null)
-  // Tool calls already synced into the cart. Messages re-render on every streamed token,
-  // so without this each add_to_cart result would be added again on every update.
+  // add_to_cart tool calls already synced into the cart
   const syncedToolCalls = useRef(new Set<string>())
   const [cart, setCart] = useState<CartItem[]>([])
   const [cartOpen, setCartOpen] = useState(false)
@@ -86,21 +71,8 @@ export default function Chat() {
 
   // Sync add_to_cart tool results into local cart state
   useEffect(() => {
-    for (const msg of messages) {
-      if (!msg.toolInvocations) continue
-      for (const inv of msg.toolInvocations) {
-        if (
-          inv.toolName === 'add_to_cart' &&
-          inv.state === 'result' &&
-          inv.result?.item &&
-          !syncedToolCalls.current.has(inv.toolCallId)
-        ) {
-          syncedToolCalls.current.add(inv.toolCallId)
-          const item = inv.result.item as { id: number; name: string; price: number }
-          setCart((prev) => upsertItem(prev, item))
-        }
-      }
-    }
+    const items = takeNewCartItems(messages, syncedToolCalls.current)
+    if (items.length > 0) setCart((prev) => items.reduce(upsertItem, prev))
   }, [messages])
 
   // Contextual follow-ups — derived from the last assistant message

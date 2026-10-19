@@ -128,6 +128,19 @@ Open http://localhost:3000
 
 ---
 
+## Testing
+
+```bash
+npm test             # unit tests (Vitest): cart, catalog search and filters, chat API guards
+npm run eval:topic   # topic-filter eval against the real model (needs OPENAI_API_KEY)
+```
+
+Unit tests mock OpenAI and Supabase, so they run offline and in CI. The eval sends 32 labeled
+messages (shopping questions, follow-ups, off-topic requests and prompt-injection attempts)
+through the topic filter and fails if any is misclassified.
+
+---
+
 ## Deploying to Vercel
 
 ```bash
